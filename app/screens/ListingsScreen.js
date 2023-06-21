@@ -1,40 +1,46 @@
-import { FlatList, StyleSheet } from "react-native";
+import { Button, FlatList, StyleSheet, Text } from "react-native";
 import Screen from "../components/Screen";
 import AppCard from "../components/AppCard";
 import colors from "../config/colors";
+import routes from "../navigation/routes";
+import listingsApi from "../api/listings";
+import { useEffect, useState } from "react";
+import ActivityIndicator from "../components/ActivityIndicator";
+import useApi from "../hooks/useApi";
 
-const listings = [
-  {
-    id: 1,
-    title: "abc",
-    price: 200,
-    image: require("../assets/jacket.jpg"),
-  },
-  {
-    id: 2,
-    title: "abc",
-    price: 200,
-    image: require("../assets/jacket.jpg"),
-  },
-  {
-    id: 3,
-    title: "abc",
-    price: 200,
-    image: require("../assets/jacket.jpg"),
-  },
-];
+function ListingsScreen({ navigation }) {
+  const getListingsApi = useApi(listingsApi.getListings);
+  const [refreshing, setRefreshing] = useState(false);
+  useEffect(() => {
+    getListingsApi.request();
+  }, []);
 
-function ListingsScreen(props) {
   return (
     <Screen style={styles.container}>
+      {getListingsApi.error && (
+        <>
+          <Text>Error fetching listings</Text>
+          <Button title="try again" onPress={getListingsApi.request} />
+        </>
+      )}
+      {/* <ActivityIndicator visible={getListingsApi.loading} /> */}
       <FlatList
-        data={listings}
+        data={getListingsApi.data}
         keyExtractor={(item) => item.id}
+        refreshing={refreshing}
+        onRefresh={() => getListingsApi.data}
         renderItem={({ item: listing }) => (
           <AppCard
-            image={listing.image}
+            imageUrl={
+              listing?.images[0]?.url ??
+              require("../assets/placeholder-image.png")
+            }
             title={listing.title}
             subTitle={`$${listing.price}`}
+            onPress={() => {
+              // console.log(listing);
+              navigation.navigate(routes.LISTING_DETAILS, listing);
+            }}
           />
         )}
       />
@@ -44,7 +50,7 @@ function ListingsScreen(props) {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    padding: 10,
     backgroundColor: colors.light,
   },
 });

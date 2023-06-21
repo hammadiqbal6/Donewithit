@@ -2,7 +2,8 @@ import { Image, ImageBackground, StyleSheet, Text, View } from "react-native";
 import AppText from "../components/AppText";
 
 import AppButton from "../components/AppButton";
-function WelcomeScreen(props) {
+import routes from "../navigation/routes";
+function WelcomeScreen({ navigation }) {
   return (
     <ImageBackground
       style={styles.background}
@@ -15,12 +16,12 @@ function WelcomeScreen(props) {
       <View style={styles.buttonContainer}>
         <AppButton
           title="Login"
-          onPress={() => console.log("pressed")}
+          onPress={() => navigation.navigate(routes.LOGIN)}
         ></AppButton>
         <AppButton
           title="Register"
           color="secondary"
-          onPress={() => console.log("pressed")}
+          onPress={() => navigation.navigate(routes.REGISTER)}
         ></AppButton>
       </View>
     </ImageBackground>

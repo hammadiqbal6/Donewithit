@@ -1,7 +1,9 @@
 import { FlatList, StyleSheet, View } from "react-native";
-import { ListItem, ListItemSeperator } from "../components/lists";
+import { ListItem, ListItemSeparator } from "../components/lists";
 import Screen from "../components/Screen";
 import colors from "../config/colors";
+import routes from "../navigation/routes";
+import useAuth from "../auth/useAuth";
 
 const menuItems = [
   {
@@ -11,16 +13,19 @@ const menuItems = [
   {
     title: "My Messages",
     icon: { name: "email", backgroundColor: colors.secondary },
+    targetScreem: routes.MESSAGES,
   },
 ];
 
-function AccountScreen(props) {
+function AccountScreen({ navigation }) {
+  const { user, logout } = useAuth();
+
   return (
     <Screen>
       <View style={styles.container}>
         <ListItem
-          title="hammad iqbal"
-          subTitle="SSE"
+          title={user.name}
+          subTitle={user.email}
           image={require("../assets/mosh.jpg")}
         />
       </View>
@@ -29,14 +34,19 @@ function AccountScreen(props) {
           data={menuItems}
           keyExtractor={(item, index) => index}
           renderItem={({ item: menuItem }) => (
-            <ListItem title={menuItem.title} icon={menuItem.icon} />
+            <ListItem
+              title={menuItem.title}
+              icon={menuItem.icon}
+              onPress={() => navigation.navigate(menuItem.targetScreem)}
+            />
           )}
-          ItemSeparatorComponent={ListItemSeperator}
+          ItemSeparatorComponent={ListItemSeparator}
         />
       </View>
       <View>
         <ListItem
-          title="Logout"
+          onPress={logout}
+          title="Log Out"
           icon={{ name: "logout", backgroundColor: colors.yellow }}
         />
       </View>

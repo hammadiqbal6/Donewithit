@@ -11,7 +11,7 @@ function CategoryPickerItem({ item, onPress }) {
           name={item.icon}
           size={50}
         />
-        <AppText style={styles.text}>{item.label}</AppText>
+        <AppText style={styles.text}>{item.name}</AppText>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -22,12 +22,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     paddingVertical: 15,
     alignItems: "center",
+    justifyContent: "center",
     width: "33%",
   },
   text: {
     fontSize: 16,
     marginTop: 5,
-    alignItems: "center",
+    textAlign: "center",
   },
 });
 export default CategoryPickerItem;

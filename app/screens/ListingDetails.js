@@ -2,21 +2,25 @@ import { Image, StyleSheet, View } from "react-native";
 import AppText from "../components/AppText";
 import colors from "../config/colors";
 import { ListItem } from "../components/lists";
+import Screen from "../components/Screen";
 
-function ListingDetails(props) {
+function ListingDetails({ route }) {
+  const listing = route.params;
   return (
-    <View style={styles.container}>
-      <Image style={styles.image} source={require("../assets/jacket.jpg")} />
-      <View style={styles.detailsContainer}>
-        <AppText style={styles.title}>Title</AppText>
-        <AppText style={styles.price}>SubTitle</AppText>
+    <Screen>
+      <View style={styles.container}>
+        <Image style={styles.image} source={{ uri: listing.images[0].url }} />
+        <View style={styles.detailsContainer}>
+          <AppText style={styles.title}>{listing.title}</AppText>
+          <AppText style={styles.price}>${listing.price}</AppText>
+        </View>
+        <ListItem
+          image={require("../assets/mosh.jpg")}
+          title="place holder"
+          subTitle="place holder"
+        />
       </View>
-      <ListItem
-        image={require("../assets/mosh.jpg")}
-        title="place holder"
-        subTitle="place holder"
-      />
-    </View>
+    </Screen>
   );
 }
 

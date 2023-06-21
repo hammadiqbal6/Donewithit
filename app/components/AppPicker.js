@@ -42,7 +42,7 @@ function AppPicker({
             />
           )}
           {selectedItem ? (
-            <AppText style={defaultStyles.text}>{selectedItem.label}</AppText>
+            <AppText style={defaultStyles.text}>{selectedItem.name}</AppText>
           ) : (
             <AppText>{placeholder}</AppText>
           )}
@@ -60,12 +60,12 @@ function AppPicker({
           <FlatList
             data={items}
             numColumns={numberOfColumns}
-            keyExtractor={(item) => item.value.toString()}
+            keyExtractor={(item) => item.id.toString()}
             renderItem={({ item: category }) => (
               <PickerItemComponent
                 item={category}
-                label={category.label}
                 onPress={() => {
+                  console.log(category);
                   setModalVisible(false);
                   onSelectItem(category);
                 }}
