@@ -4,6 +4,8 @@ const endpoint = "/listings";
 
 const getListings = () => client.get(endpoint);
 
+const getListing = (id) => client.get(`/listing/${id}`);
+
 const getMyListings = () => client.get("/my/listings");
 
 export const addListing = (listing, onUploadProgress) => {
@@ -14,19 +16,11 @@ export const addListing = (listing, onUploadProgress) => {
   data.append("description", listing.description || "");
 
   listing.images.forEach((image, index) => {
-    if (typeof image === "string" && image.startsWith("data:")) {
-      data.append("images", {
-        name: `image${index}.jpg`,
-        type: "image/jpeg",
-        uri: image,
-      });
-    } else {
-      data.append("images", {
-        name: `image${index}.jpg`,
-        type: "image/jpeg",
-        uri: image,
-      });
-    }
+    data.append("images", {
+      name: `image${index}.jpg`,
+      type: "image/jpeg",
+      uri: image,
+    });
   });
 
   if (listing.location)
@@ -43,5 +37,6 @@ export const addListing = (listing, onUploadProgress) => {
 export default {
   addListing,
   getListings,
+  getListing,
   getMyListings,
 };

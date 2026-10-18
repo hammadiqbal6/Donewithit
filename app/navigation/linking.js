@@ -9,7 +9,12 @@ const linking = {
         path: "feed",
         screens: {
           Listings: "",
-          ListingDetails: "listing",
+          ListingDetails: {
+            path: "listing/:id",
+            parse: {
+              id: Number,
+            },
+          },
         },
       },
       ListingEdit: "new",
@@ -19,7 +24,12 @@ const linking = {
           Account: "",
           MyListings: "my-listings",
           Messages: "messages",
-          ListingDetails: "listing",
+          ListingDetails: {
+            path: "listing/:id",
+            parse: {
+              id: Number,
+            },
+          },
         },
       },
     },

@@ -31,7 +31,10 @@ function ListingsScreen() {
   }, [getListingsApi]);
 
   const openListing = (listing) => {
-    navigation.navigate(routes.LISTING_DETAILS, listing);
+    navigation.navigate(routes.LISTING_DETAILS, {
+      id: listing.id,
+      ...listing,
+    });
   };
 
   const listings = getListingsApi.data || [];
