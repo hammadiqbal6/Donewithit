@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { ListItem, ListItemSeparator } from "../components/lists";
 import Screen from "../components/Screen";
 import colors from "../config/colors";
@@ -9,11 +9,12 @@ const menuItems = [
   {
     title: "My Listings",
     icon: { name: "format-list-bulleted", backgroundColor: colors.primary },
+    targetScreen: routes.MY_LISTINGS,
   },
   {
     title: "My Messages",
     icon: { name: "email", backgroundColor: colors.secondary },
-    targetScreem: routes.MESSAGES,
+    targetScreen: routes.MESSAGES,
   },
 ];
 
@@ -21,27 +22,25 @@ function AccountScreen({ navigation }) {
   const { user, logout } = useAuth();
 
   return (
-    <Screen>
+    <Screen style={styles.screen}>
       <View style={styles.container}>
         <ListItem
-          title={user.name}
-          subTitle={user.email}
+          title={user?.name || "Account"}
+          subTitle={user?.email}
           image={require("../assets/mosh.jpg")}
         />
       </View>
       <View style={styles.container}>
-        <FlatList
-          data={menuItems}
-          keyExtractor={(item, index) => index}
-          renderItem={({ item: menuItem }) => (
+        {menuItems.map((menuItem, index) => (
+          <View key={menuItem.title}>
+            {index > 0 && <ListItemSeparator />}
             <ListItem
               title={menuItem.title}
               icon={menuItem.icon}
-              onPress={() => navigation.navigate(menuItem.targetScreem)}
+              onPress={() => navigation.navigate(menuItem.targetScreen)}
             />
-          )}
-          ItemSeparatorComponent={ListItemSeparator}
-        />
+          </View>
+        ))}
       </View>
       <View>
         <ListItem
@@ -55,8 +54,11 @@ function AccountScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  screen: {
+    backgroundColor: colors.light,
+  },
   container: {
-    marginBottom: 10,
+    marginVertical: 20,
   },
 });
 

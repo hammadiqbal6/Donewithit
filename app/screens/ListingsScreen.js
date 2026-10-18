@@ -1,57 +1,127 @@
-import { Button, FlatList, StyleSheet, Text } from "react-native";
+import {
+  Platform,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  View,
+} from "react-native";
+import { useCallback, useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
+
 import Screen from "../components/Screen";
 import AppCard from "../components/AppCard";
+import AppText from "../components/AppText";
+import AppButton from "../components/AppButton";
+import ActivityIndicator from "../components/ActivityIndicator";
 import colors from "../config/colors";
 import routes from "../navigation/routes";
 import listingsApi from "../api/listings";
-import { useEffect, useState } from "react";
-import ActivityIndicator from "../components/ActivityIndicator";
 import useApi from "../hooks/useApi";
 
-function ListingsScreen({ navigation }) {
+function ListingsScreen() {
+  const navigation = useNavigation();
   const getListingsApi = useApi(listingsApi.getListings);
-  const [refreshing, setRefreshing] = useState(false);
+
   useEffect(() => {
     getListingsApi.request();
   }, []);
 
+  const handleRefresh = useCallback(() => {
+    getListingsApi.request();
+  }, [getListingsApi]);
+
+  const openListing = (listing) => {
+    navigation.navigate(routes.LISTING_DETAILS, listing);
+  };
+
+  const listings = getListingsApi.data || [];
+
   return (
     <Screen style={styles.container}>
-      {getListingsApi.error && (
-        <>
-          <Text>Error fetching listings</Text>
-          <Button title="try again" onPress={getListingsApi.request} />
-        </>
+      {getListingsApi.loading && listings.length === 0 && (
+        <ActivityIndicator visible />
       )}
-      {/* <ActivityIndicator visible={getListingsApi.loading} /> */}
-      <FlatList
-        data={getListingsApi.data}
-        keyExtractor={(item) => item.id}
-        refreshing={refreshing}
-        onRefresh={() => getListingsApi.data}
-        renderItem={({ item: listing }) => (
+      {getListingsApi.error && (
+        <View style={styles.errorContainer}>
+          <AppText style={styles.errorText}>
+            Couldn&apos;t load listings. Check that the API is running.
+          </AppText>
+          <AppButton title="Try again" onPress={handleRefresh} />
+        </View>
+      )}
+      {!getListingsApi.error &&
+        !getListingsApi.loading &&
+        listings.length === 0 && (
+          <View style={styles.emptyContainer}>
+            <AppText style={styles.emptyTitle}>No listings yet</AppText>
+            <AppText style={styles.emptySubtitle}>
+              Be the first to post something for sale.
+            </AppText>
+          </View>
+        )}
+      <ScrollView
+        contentContainerStyle={styles.listContent}
+        refreshControl={
+          <RefreshControl
+            refreshing={getListingsApi.loading && listings.length > 0}
+            onRefresh={handleRefresh}
+            tintColor={colors.primary}
+          />
+        }
+      >
+        {listings.map((listing) => (
           <AppCard
+            key={listing.id.toString()}
             imageUrl={
-              listing?.images[0]?.url ??
+              listing?.images?.[0]?.url ||
               require("../assets/placeholder-image.png")
             }
             title={listing.title}
             subTitle={`$${listing.price}`}
-            onPress={() => {
-              // console.log(listing);
-              navigation.navigate(routes.LISTING_DETAILS, listing);
-            }}
+            onPress={() => openListing(listing)}
           />
-        )}
-      />
+        ))}
+      </ScrollView>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
+    paddingHorizontal: 10,
     backgroundColor: colors.light,
+  },
+  listContent: {
+    paddingTop: 10,
+    paddingBottom: 30,
+    ...Platform.select({
+      web: {
+        maxWidth: 760,
+        width: "100%",
+        alignSelf: "center",
+      },
+    }),
+  },
+  errorContainer: {
+    padding: 20,
+    alignItems: "center",
+  },
+  errorText: {
+    textAlign: "center",
+    marginBottom: 10,
+    color: colors.medium,
+  },
+  emptyContainer: {
+    padding: 40,
+    alignItems: "center",
+  },
+  emptyTitle: {
+    fontWeight: "700",
+    marginBottom: 8,
+  },
+  emptySubtitle: {
+    color: colors.medium,
+    textAlign: "center",
   },
 });
 

@@ -1,83 +1,95 @@
-import { FlatList, View } from "react-native";
+import { useCallback, useEffect, useState } from "react";
+import { FlatList, StyleSheet, View } from "react-native";
+
 import {
   ListItem,
   ListItemSeparator,
   ListItemDeleteAction,
 } from "../components/lists";
-import { useEffect, useState } from "react";
+import Screen from "../components/Screen";
+import AppText from "../components/AppText";
+import AppButton from "../components/AppButton";
+import ActivityIndicator from "../components/ActivityIndicator";
+import messagesApi from "../api/messages";
+import colors from "../config/colors";
 
-function MessagesScreen(props) {
+function MessagesScreen() {
   const [messages, setMessages] = useState([]);
-  const [refreshing, setRefreshing] = useState(false);
-  useEffect(() => {
-    setMessages([
-      {
-        id: 1,
-        title: "abvasdadasdasdasdasdasdadasdasdasdasdasdasdasdasdasdasdasd",
-        description:
-          "abasdasdasdasdasdasdasdasdadasdasdasdasdasdasdasdadasdasdasdasdsc",
-        image: require("../assets/jacket.jpg"),
-      },
-      {
-        id: 2,
-        title: "abv",
-        description: "abc",
-        image: require("../assets/mosh.jpg"),
-      },
-      {
-        id: 3,
-        title: "abv",
-        description: "abc",
-        image: require("../assets/mosh.jpg"),
-      },
-      {
-        id: 4,
-        title: "abv",
-        description: "abc",
-        image: require("../assets/jacket.jpg"),
-      },
-    ]);
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const loadMessages = useCallback(async () => {
+    setLoading(true);
+    const response = await messagesApi.getMessages();
+    setLoading(false);
+    setError(!response.ok);
+    if (response.ok) setMessages(response.data || []);
   }, []);
-  const handleOnPress = () => {};
+
+  useEffect(() => {
+    loadMessages();
+  }, [loadMessages]);
+
   const handleOnDelete = (message) => {
-    setMessages(messages.filter((m) => m.id !== message.id));
+    setMessages((current) => current.filter((m) => m.id !== message.id));
   };
+
   return (
-    <FlatList
-      data={messages}
-      keyExtractor={(message) => message.id.toString()}
-      renderItem={({ item }) => (
-        <ListItem
-          title={item.title}
-          subTitle={item.description}
-          image={item.image}
-          // icon={{ name: "trash-can", color: "black" }}
-          onPress={handleOnPress}
-          renderRightActions={() => (
-            <ListItemDeleteAction onPress={() => handleOnDelete(item)} />
-          )}
-        />
+    <Screen style={styles.screen}>
+      <ActivityIndicator visible={loading && messages.length === 0} />
+      {error && (
+        <View style={styles.centered}>
+          <AppText style={styles.muted}>Couldn&apos;t load messages.</AppText>
+          <AppButton title="Try again" onPress={loadMessages} />
+        </View>
       )}
-      ItemSeparatorComponent={ListItemSeparator}
-      refreshing={refreshing}
-      onRefresh={() => {
-        setMessages([
-          {
-            id: 3,
-            title: "abv",
-            description: "abc",
-            image: require("../assets/mosh.jpg"),
-          },
-          {
-            id: 4,
-            title: "abv",
-            description: "abc",
-            image: require("../assets/jacket.jpg"),
-          },
-        ]);
-      }}
-    />
+      {!error && !loading && messages.length === 0 && (
+        <View style={styles.centered}>
+          <AppText style={styles.title}>No messages yet</AppText>
+          <AppText style={styles.muted}>
+            When buyers contact you about a listing, messages show up here.
+          </AppText>
+        </View>
+      )}
+      <FlatList
+        data={messages}
+        keyExtractor={(message) => message.id.toString()}
+        renderItem={({ item }) => (
+          <ListItem
+            title={item.fromUser?.name || "Buyer"}
+            subTitle={item.content}
+            image={require("../assets/mosh.jpg")}
+            onPress={() => {}}
+            renderRightActions={() => (
+              <ListItemDeleteAction onPress={() => handleOnDelete(item)} />
+            )}
+          />
+        )}
+        ItemSeparatorComponent={ListItemSeparator}
+        refreshing={loading}
+        onRefresh={loadMessages}
+      />
+    </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  screen: {
+    backgroundColor: colors.light,
+  },
+  centered: {
+    padding: 30,
+    alignItems: "center",
+  },
+  title: {
+    fontWeight: "700",
+    marginBottom: 8,
+  },
+  muted: {
+    color: colors.medium,
+    textAlign: "center",
+    marginBottom: 12,
+  },
+});
 
 export default MessagesScreen;

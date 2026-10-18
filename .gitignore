@@ -1,6 +1,13 @@
+# Dependencies
 node_modules/
+
+# Expo
 .expo/
 dist/
+web-build/
+expo-env.d.ts
+
+# Native / secrets
 npm-debug.*
 *.jks
 *.p8
@@ -8,10 +15,37 @@ npm-debug.*
 *.key
 *.mobileprovision
 *.orig.*
-web-build/
+.env
+.env.*
+!.env.example
 
-# macOS
+# Archives / junk
+*.zip
+*.sqlite
+*.sqlite3
+*.db
 .DS_Store
+Thumbs.db
 
-# Temporary files created by Metro to check the health of the file watcher
+# Metro
 .metro-health-check*
+
+# Local test artifacts
+.playwright-mcp/
+/*.png
+!app/assets/**/*.png
+
+# Logs & coverage
+*.log
+coverage/
+.nyc_output/
+
+# IDE
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# OS / temp
+*.swp
+*.swo
+.cache/

@@ -1,10 +1,10 @@
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import colors from "../config/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import colors from "../config/colors";
 
 function NewListingButton({ onPress }) {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={onPress} accessibilityRole="button">
       <View style={styles.container}>
         <MaterialCommunityIcons
           name="plus-circle"
@@ -19,14 +19,16 @@ function NewListingButton({ onPress }) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.primary,
-    height: 80,
-    width: 80,
-    borderRadius: 40,
-    bottom: 40,
+    height: 70,
+    width: 70,
+    borderRadius: 35,
+    bottom: 18,
     borderColor: colors.white,
-    borderWidth: 10,
+    borderWidth: 8,
     alignItems: "center",
     justifyContent: "center",
+    alignSelf: "center",
   },
 });
+
 export default NewListingButton;

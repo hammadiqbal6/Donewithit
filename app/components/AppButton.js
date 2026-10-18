@@ -2,13 +2,20 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
 import colors from "../config/colors";
 
-function AppButton({ title, onPress, color = "primary" }) {
+function AppButton({ title, onPress, color = "primary", disabled = false }) {
   return (
     <TouchableOpacity
-      style={[styles.button, { backgroundColor: colors[color] }]}
+      style={[
+        styles.button,
+        { backgroundColor: colors[color] },
+        disabled && styles.disabled,
+      ]}
       onPress={onPress}
+      onClick={onPress}
+      disabled={disabled}
+      accessibilityRole="button"
     >
-      <Text styles={styles.title}>{title}</Text>
+      <Text style={styles.title}>{title}</Text>
     </TouchableOpacity>
   );
 }
@@ -22,6 +29,9 @@ const styles = StyleSheet.create({
     padding: 15,
     width: "100%",
     marginVertical: 10,
+  },
+  disabled: {
+    opacity: 0.6,
   },
   title: {
     color: colors.white,
