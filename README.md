@@ -15,11 +15,11 @@ A React Native (Expo) marketplace for buying and selling second-hand items, back
 
 ## Tech stack
 
-| Layer | Stack |
-| --- | --- |
+| Layer               | Stack                                                               |
+| ------------------- | ------------------------------------------------------------------- |
 | Mobile / web client | React Native, Expo SDK 48, React Navigation, Formik + Yup, Apisauce |
-| API | Node.js, Express, Joi, JWT, Multer, Sharp |
-| Data | In-memory stores (demo seed users & listings) |
+| API                 | Node.js, Express, Joi, JWT, Multer, Sharp                           |
+| Data                | In-memory stores (demo seed users & listings)                       |
 
 ## Screenshots
 
@@ -60,19 +60,19 @@ The client reads `extra.apiUrl` from `app.json` (default `http://localhost:9000/
 
 ### Demo login
 
-| Email | Password |
-| --- | --- |
-| `mosh@domain.com` | `12345` |
-| `john@domain.com` | `12345` |
+| Email             | Password |
+| ----------------- | -------- |
+| `mosh@domain.com` | `12345`  |
+| `john@domain.com` | `12345`  |
 
 ## Environment variables
 
 ### Backend (`backend/.env`)
 
-| Variable | Description | Default |
-| --- | --- | --- |
-| `PORT` | API port | `9000` |
-| `JWT_PRIVATE_KEY` | Secret used to sign auth tokens | see `.env.example` |
+| Variable          | Description                        | Default                         |
+| ----------------- | ---------------------------------- | ------------------------------- |
+| `PORT`            | API port                           | `9000`                          |
+| `JWT_PRIVATE_KEY` | Secret used to sign auth tokens    | see `.env.example`              |
 | `ASSETS_BASE_URL` | Public base URL for listing images | `http://localhost:9000/assets/` |
 
 Root `.env.example` and `backend/.env.example` document the same knobs. Never commit real secrets.
@@ -92,12 +92,12 @@ Root `.env.example` and `backend/.env.example` document the same knobs. Never co
 
 ## Scripts
 
-| Command | Description |
-| --- | --- |
-| `npm start` / `npm run web` | Start Expo |
-| `npm run lint` | ESLint |
-| `npm run format` | Prettier write |
-| `cd backend && npm start` | Start API |
+| Command                     | Description      |
+| --------------------------- | ---------------- |
+| `npm start` / `npm run web` | Start Expo       |
+| `npm run lint`              | ESLint           |
+| `npm run format`            | Prettier write   |
+| `cd backend && npm start`   | Start API        |
 | `cd backend && npm run dev` | API with nodemon |
 
 ## CI

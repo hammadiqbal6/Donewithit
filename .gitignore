@@ -32,12 +32,8 @@ Thumbs.db
 
 # Local test artifacts
 .playwright-mcp/
-/welcome.png
-/listings.png
-/login.png
-/listing-details.png
-/account.png
-/messages.png
+/*.png
+!app/assets/**/*.png
 
 # Logs & coverage
 *.log

@@ -40,9 +40,7 @@ function LoginScreen() {
       <View style={styles.container}>
         <Image style={styles.logo} source={require("../assets/logo-red.png")} />
         <AppText style={styles.heading}>Welcome back</AppText>
-        <AppText style={styles.hint}>
-          Demo: mosh@domain.com / 12345
-        </AppText>
+        <AppText style={styles.hint}>Demo: mosh@domain.com / 12345</AppText>
         <AppForm
           initialValues={{ email: "", password: "" }}
           onSubmit={handleSubmit}

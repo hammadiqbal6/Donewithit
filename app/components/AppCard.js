@@ -39,7 +39,9 @@ function AppCard({ imageUrl, title, subTitle, onPress }) {
         <AppText style={styles.title} numberOfLines={2}>
           {title}
         </AppText>
-        {subTitle ? <AppText style={styles.subtitle}>{subTitle}</AppText> : null}
+        {subTitle ? (
+          <AppText style={styles.subtitle}>{subTitle}</AppText>
+        ) : null}
       </View>
     </TouchableOpacity>
   );

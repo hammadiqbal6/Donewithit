@@ -1,6 +1,11 @@
 import React from "react";
 import LottieView from "lottie-react-native";
-import { View, StyleSheet, ActivityIndicator as Spinner, Platform } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ActivityIndicator as Spinner,
+  Platform,
+} from "react-native";
 import colors from "../config/colors";
 
 function ActivityIndicator({ visible = false }) {

@@ -27,7 +27,9 @@ function MyListingsScreen({ navigation }) {
       <ActivityIndicator visible={getMyListingsApi.loading} />
       {getMyListingsApi.error && (
         <View style={styles.centered}>
-          <AppText style={styles.muted}>Couldn&apos;t load your listings.</AppText>
+          <AppText style={styles.muted}>
+            Couldn&apos;t load your listings.
+          </AppText>
           <AppButton title="Try again" onPress={handleRefresh} />
         </View>
       )}
@@ -55,9 +57,7 @@ function MyListingsScreen({ navigation }) {
             }
             title={listing.title}
             subTitle={`$${listing.price}`}
-            onPress={() =>
-              navigation.navigate(routes.LISTING_DETAILS, listing)
-            }
+            onPress={() => navigation.navigate(routes.LISTING_DETAILS, listing)}
           />
         )}
       />

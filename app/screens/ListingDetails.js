@@ -76,7 +76,9 @@ function ListingDetails({ route }) {
             <AppText style={styles.title}>{listing.title}</AppText>
             <AppText style={styles.price}>${listing.price}</AppText>
             {listing.description ? (
-              <AppText style={styles.description}>{listing.description}</AppText>
+              <AppText style={styles.description}>
+                {listing.description}
+              </AppText>
             ) : null}
           </View>
 
