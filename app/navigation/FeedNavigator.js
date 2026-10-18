@@ -6,10 +6,19 @@ const Stack = createNativeStackNavigator();
 
 const FeedNavigator = () => (
   <Stack.Navigator>
-    <Stack.Group screenOptions={{ presentation: "modal", headerShown: false }}>
-      <Stack.Screen name="Listings" component={ListingsScreen} />
-      <Stack.Screen name="ListingDetails" component={ListingDetails} />
-    </Stack.Group>
+    <Stack.Screen
+      name="Listings"
+      component={ListingsScreen}
+      options={{ headerShown: false }}
+    />
+    <Stack.Screen
+      name="ListingDetails"
+      component={ListingDetails}
+      options={{
+        presentation: "modal",
+        title: "Listing",
+      }}
+    />
   </Stack.Navigator>
 );
 

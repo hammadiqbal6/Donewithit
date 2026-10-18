@@ -17,7 +17,7 @@ const store = async (key, value) => {
 };
 
 const isExpired = (item) => {
-  const now = moment().now();
+  const now = moment();
   const storedTime = moment(item.timestamp);
   return now.diff(storedTime, "minutes") > expiryInMinutes;
 };

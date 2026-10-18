@@ -9,11 +9,12 @@ const menuItems = [
   {
     title: "My Listings",
     icon: { name: "format-list-bulleted", backgroundColor: colors.primary },
+    targetScreen: routes.MY_LISTINGS,
   },
   {
     title: "My Messages",
     icon: { name: "email", backgroundColor: colors.secondary },
-    targetScreem: routes.MESSAGES,
+    targetScreen: routes.MESSAGES,
   },
 ];
 
@@ -21,26 +22,27 @@ function AccountScreen({ navigation }) {
   const { user, logout } = useAuth();
 
   return (
-    <Screen>
+    <Screen style={styles.screen}>
       <View style={styles.container}>
         <ListItem
-          title={user.name}
-          subTitle={user.email}
+          title={user?.name || "Account"}
+          subTitle={user?.email}
           image={require("../assets/mosh.jpg")}
         />
       </View>
       <View style={styles.container}>
         <FlatList
           data={menuItems}
-          keyExtractor={(item, index) => index}
+          keyExtractor={(item) => item.title}
           renderItem={({ item: menuItem }) => (
             <ListItem
               title={menuItem.title}
               icon={menuItem.icon}
-              onPress={() => navigation.navigate(menuItem.targetScreem)}
+              onPress={() => navigation.navigate(menuItem.targetScreen)}
             />
           )}
           ItemSeparatorComponent={ListItemSeparator}
+          scrollEnabled={false}
         />
       </View>
       <View>
@@ -55,8 +57,11 @@ function AccountScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  screen: {
+    backgroundColor: colors.light,
+  },
   container: {
-    marginBottom: 10,
+    marginVertical: 20,
   },
 });
 

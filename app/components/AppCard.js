@@ -1,21 +1,43 @@
-import { StyleSheet, TouchableWithoutFeedback, View } from "react-native";
+import {
+  Image,
+  Platform,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import AppText from "./AppText";
-
 import colors from "../config/colors";
-import { Image } from "react-native-expo-image-cache";
+
+function CardImage({ imageUrl, style }) {
+  const uri = typeof imageUrl === "string" ? imageUrl : null;
+  const source = uri ? { uri } : imageUrl;
+
+  if (Platform.OS !== "web" && uri) {
+    try {
+      const { Image: CachedImage } = require("react-native-expo-image-cache");
+      return (
+        <CachedImage style={style} uri={uri} preview={{ uri }} tint="light" />
+      );
+    } catch (error) {
+      // Fall through to standard Image.
+    }
+  }
+
+  return <Image style={style} source={source} />;
+}
 
 function AppCard({ imageUrl, title, subTitle, onPress }) {
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={styles.card}>
-        <Image
-          style={styles.image}
-          uri={imageUrl}
-          preview={{ uri: imageUrl }}
-        ></Image>
+        <CardImage imageUrl={imageUrl} style={styles.image} />
         <View style={styles.detailsContainer}>
-          <AppText style={styles.title}>{title}</AppText>
-          {title && <AppText>{subTitle}</AppText>}
+          <AppText style={styles.title} numberOfLines={2}>
+            {title}
+          </AppText>
+          {subTitle ? (
+            <AppText style={styles.subtitle}>{subTitle}</AppText>
+          ) : null}
         </View>
       </View>
     </TouchableWithoutFeedback>
@@ -29,6 +51,16 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     marginBottom: 20,
     overflow: "hidden",
+    ...Platform.select({
+      web: {
+        boxShadow: "0 8px 24px rgba(12, 12, 12, 0.08)",
+        maxWidth: 720,
+        alignSelf: "center",
+      },
+      default: {
+        elevation: 1,
+      },
+    }),
   },
   image: {
     width: "100%",
@@ -39,6 +71,7 @@ const styles = StyleSheet.create({
   },
   title: {
     marginBottom: 7,
+    color: colors.dark,
   },
   subtitle: {
     color: colors.secondary,
