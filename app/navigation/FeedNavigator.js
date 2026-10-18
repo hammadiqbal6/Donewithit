@@ -1,14 +1,16 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createStackNavigator } from "@react-navigation/stack";
 import ListingsScreen from "../screens/ListingsScreen";
 import ListingDetails from "../screens/ListingDetails";
+import colors from "../config/colors";
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 const FeedNavigator = () => (
   <Stack.Navigator
     screenOptions={{
-      headerTintColor: "#fc5c65",
-      contentStyle: { backgroundColor: "#fff" },
+      headerTintColor: colors.primary,
+      headerTitleStyle: { fontWeight: "600" },
+      cardStyle: { backgroundColor: colors.white },
     }}
   >
     <Stack.Screen

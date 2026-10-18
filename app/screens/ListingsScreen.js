@@ -1,6 +1,5 @@
 import {
   Platform,
-  Pressable,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -71,22 +70,16 @@ function ListingsScreen() {
         }
       >
         {listings.map((listing) => (
-          <Pressable
+          <AppCard
             key={listing.id.toString()}
+            imageUrl={
+              listing?.images?.[0]?.url ||
+              require("../assets/placeholder-image.png")
+            }
+            title={listing.title}
+            subTitle={`$${listing.price}`}
             onPress={() => openListing(listing)}
-            accessibilityRole="button"
-            accessibilityLabel={`${listing.title} $${listing.price}`}
-          >
-            <AppCard
-              imageUrl={
-                listing?.images?.[0]?.url ||
-                require("../assets/placeholder-image.png")
-              }
-              title={listing.title}
-              subTitle={`$${listing.price}`}
-              onPress={() => openListing(listing)}
-            />
-          </Pressable>
+          />
         ))}
       </ScrollView>
     </Screen>
