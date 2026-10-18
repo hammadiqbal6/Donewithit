@@ -19,8 +19,11 @@ import {
   ErrorMessage,
   SubmitButton,
 } from "../components/forms";
+import ActivityIndicator from "../components/ActivityIndicator";
+import AppButton from "../components/AppButton";
 import usersApi from "../api/users";
 import messagesApi from "../api/messages";
+import listingsApi from "../api/listings";
 import useAuth from "../auth/useAuth";
 
 const validationSchema = Yup.object().shape({
@@ -28,11 +31,32 @@ const validationSchema = Yup.object().shape({
 });
 
 function ListingDetails({ route }) {
-  const listing = route.params;
+  const params = route.params || {};
+  const listingId = params.id || params.listingId;
   const { user } = useAuth();
+
+  const [listing, setListing] = useState(params.title ? params : null);
   const [seller, setSeller] = useState(null);
+  const [loading, setLoading] = useState(!params.title && !!listingId);
+  const [error, setError] = useState(false);
   const [sendFailed, setSendFailed] = useState(false);
   const [sendSucceeded, setSendSucceeded] = useState(false);
+
+  useEffect(() => {
+    const loadListing = async () => {
+      if (listing?.id || !listingId) return;
+      setLoading(true);
+      const response = await listingsApi.getListing(listingId);
+      setLoading(false);
+      if (!response.ok) {
+        setError(true);
+        return;
+      }
+      setListing(response.data);
+      setError(false);
+    };
+    loadListing();
+  }, [listingId, listing?.id]);
 
   useEffect(() => {
     const loadSeller = async () => {
@@ -54,6 +78,34 @@ function ListingDetails({ route }) {
     setSendSucceeded(true);
     resetForm();
   };
+
+  if (loading) {
+    return (
+      <Screen>
+        <ActivityIndicator visible />
+      </Screen>
+    );
+  }
+
+  if (error || !listing) {
+    return (
+      <Screen style={styles.centered}>
+        <AppText style={styles.muted}>Couldn&apos;t load this listing.</AppText>
+        <AppButton
+          title="Try again"
+          onPress={async () => {
+            setLoading(true);
+            const response = await listingsApi.getListing(listingId);
+            setLoading(false);
+            if (response.ok) {
+              setListing(response.data);
+              setError(false);
+            } else setError(true);
+          }}
+        />
+      </Screen>
+    );
+  }
 
   const imageUri = listing?.images?.[0]?.url;
 
@@ -179,6 +231,16 @@ const styles = StyleSheet.create({
     color: colors.secondary,
     marginBottom: 8,
     fontWeight: "600",
+  },
+  centered: {
+    padding: 30,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  muted: {
+    color: colors.medium,
+    marginBottom: 12,
+    textAlign: "center",
   },
 });
 
