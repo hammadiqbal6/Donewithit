@@ -23,7 +23,15 @@ A React Native (Expo) marketplace for buying and selling second-hand items, back
 
 ## Screenshots
 
-_Add screenshots from the Expo web walkthrough here after local run._
+Captured from Expo web against the local API:
+
+| Feed | Listing details |
+| --- | --- |
+| ![Feed](docs/screenshots/feed.png) | ![Listing details](docs/screenshots/listing-details.png) |
+
+| Messages | Account |
+| --- | --- |
+| ![Messages](docs/screenshots/messages.png) | ![Account](docs/screenshots/account.png) |
 
 ## Getting started
 
