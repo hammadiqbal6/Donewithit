@@ -1,8 +1,8 @@
 import {
   Image,
   Platform,
-  Pressable,
   StyleSheet,
+  TouchableOpacity,
   View,
 } from "react-native";
 import AppText from "../AppText";
@@ -21,14 +21,12 @@ function ListItem({
   renderRightActions,
 }) {
   const content = (
-    <Pressable
-      underlayColor={colors.light}
+    <TouchableOpacity
+      activeOpacity={0.7}
       onPress={onPress}
+      disabled={!onPress}
       accessibilityRole={onPress ? "button" : undefined}
-      style={({ pressed }) => [
-        styles.container,
-        pressed && onPress ? styles.pressed : null,
-      ]}
+      style={styles.container}
     >
       {image && <Image style={styles.image} source={image} />}
       {icon && (
@@ -54,7 +52,7 @@ function ListItem({
         size={25}
         color={colors.medium}
       />
-    </Pressable>
+    </TouchableOpacity>
   );
 
   if (Platform.OS === "web" || !renderRightActions) {
@@ -79,9 +77,6 @@ const styles = StyleSheet.create({
         cursor: "pointer",
       },
     }),
-  },
-  pressed: {
-    backgroundColor: colors.light,
   },
   detailsContainer: {
     marginVertical: 10,

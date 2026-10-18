@@ -11,6 +11,7 @@ function AppButton({ title, onPress, color = "primary", disabled = false }) {
         disabled && styles.disabled,
       ]}
       onPress={onPress}
+      onClick={onPress}
       disabled={disabled}
       accessibilityRole="button"
     >
