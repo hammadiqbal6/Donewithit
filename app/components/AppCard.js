@@ -1,8 +1,8 @@
 import {
   Image,
   Platform,
+  Pressable,
   StyleSheet,
-  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import AppText from "./AppText";
@@ -28,19 +28,19 @@ function CardImage({ imageUrl, style }) {
 
 function AppCard({ imageUrl, title, subTitle, onPress }) {
   return (
-    <TouchableWithoutFeedback onPress={onPress}>
-      <View style={styles.card}>
-        <CardImage imageUrl={imageUrl} style={styles.image} />
-        <View style={styles.detailsContainer}>
-          <AppText style={styles.title} numberOfLines={2}>
-            {title}
-          </AppText>
-          {subTitle ? (
-            <AppText style={styles.subtitle}>{subTitle}</AppText>
-          ) : null}
-        </View>
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      style={({ pressed }) => [styles.card, pressed && styles.pressed]}
+    >
+      <CardImage imageUrl={imageUrl} style={styles.image} />
+      <View style={styles.detailsContainer}>
+        <AppText style={styles.title} numberOfLines={2}>
+          {title}
+        </AppText>
+        {subTitle ? <AppText style={styles.subtitle}>{subTitle}</AppText> : null}
       </View>
-    </TouchableWithoutFeedback>
+    </Pressable>
   );
 }
 
@@ -56,11 +56,15 @@ const styles = StyleSheet.create({
         boxShadow: "0 8px 24px rgba(12, 12, 12, 0.08)",
         maxWidth: 720,
         alignSelf: "center",
+        cursor: "pointer",
       },
       default: {
         elevation: 1,
       },
     }),
+  },
+  pressed: {
+    opacity: 0.92,
   },
   image: {
     width: "100%",
