@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { ListItem, ListItemSeparator } from "../components/lists";
 import Screen from "../components/Screen";
 import colors from "../config/colors";
@@ -31,19 +31,16 @@ function AccountScreen({ navigation }) {
         />
       </View>
       <View style={styles.container}>
-        <FlatList
-          data={menuItems}
-          keyExtractor={(item) => item.title}
-          renderItem={({ item: menuItem }) => (
+        {menuItems.map((menuItem, index) => (
+          <View key={menuItem.title}>
+            {index > 0 && <ListItemSeparator />}
             <ListItem
               title={menuItem.title}
               icon={menuItem.icon}
               onPress={() => navigation.navigate(menuItem.targetScreen)}
             />
-          )}
-          ItemSeparatorComponent={ListItemSeparator}
-          scrollEnabled={false}
-        />
+          </View>
+        ))}
       </View>
       <View>
         <ListItem

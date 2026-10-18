@@ -1,8 +1,8 @@
 import {
   Image,
   Platform,
-  Pressable,
   StyleSheet,
+  TouchableOpacity,
   View,
 } from "react-native";
 import AppText from "./AppText";
@@ -28,11 +28,11 @@ function CardImage({ imageUrl, style }) {
 
 function AppCard({ imageUrl, title, subTitle, onPress }) {
   return (
-    <Pressable
+    <TouchableOpacity
+      activeOpacity={0.9}
       onPress={onPress}
-      onClick={onPress}
       accessibilityRole="button"
-      style={({ pressed }) => [styles.card, pressed && styles.pressed]}
+      style={styles.card}
     >
       <CardImage imageUrl={imageUrl} style={styles.image} />
       <View style={styles.detailsContainer}>
@@ -41,7 +41,7 @@ function AppCard({ imageUrl, title, subTitle, onPress }) {
         </AppText>
         {subTitle ? <AppText style={styles.subtitle}>{subTitle}</AppText> : null}
       </View>
-    </Pressable>
+    </TouchableOpacity>
   );
 }
 
@@ -63,9 +63,6 @@ const styles = StyleSheet.create({
         elevation: 1,
       },
     }),
-  },
-  pressed: {
-    opacity: 0.92,
   },
   image: {
     width: "100%",
