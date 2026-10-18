@@ -30,6 +30,15 @@ Thumbs.db
 # Metro
 .metro-health-check*
 
+# Local test artifacts
+.playwright-mcp/
+/welcome.png
+/listings.png
+/login.png
+/listing-details.png
+/account.png
+/messages.png
+
 # Logs & coverage
 *.log
 coverage/
