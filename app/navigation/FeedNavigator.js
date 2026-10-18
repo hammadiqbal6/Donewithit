@@ -5,7 +5,12 @@ import ListingDetails from "../screens/ListingDetails";
 const Stack = createNativeStackNavigator();
 
 const FeedNavigator = () => (
-  <Stack.Navigator>
+  <Stack.Navigator
+    screenOptions={{
+      headerTintColor: "#fc5c65",
+      contentStyle: { backgroundColor: "#fff" },
+    }}
+  >
     <Stack.Screen
       name="Listings"
       component={ListingsScreen}
@@ -14,10 +19,7 @@ const FeedNavigator = () => (
     <Stack.Screen
       name="ListingDetails"
       component={ListingDetails}
-      options={{
-        presentation: "modal",
-        title: "Listing",
-      }}
+      options={{ title: "Listing" }}
     />
   </Stack.Navigator>
 );
