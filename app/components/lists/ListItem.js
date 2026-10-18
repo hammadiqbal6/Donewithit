@@ -1,4 +1,10 @@
-import { Image, StyleSheet, TouchableHighlight, View } from "react-native";
+import {
+  Image,
+  Platform,
+  Pressable,
+  StyleSheet,
+  View,
+} from "react-native";
 import AppText from "../AppText";
 import colors from "../../config/colors";
 import Swipeable from "react-native-gesture-handler/Swipeable";
@@ -14,38 +20,50 @@ function ListItem({
   onPress,
   renderRightActions,
 }) {
+  const content = (
+    <Pressable
+      underlayColor={colors.light}
+      onPress={onPress}
+      accessibilityRole={onPress ? "button" : undefined}
+      style={({ pressed }) => [
+        styles.container,
+        pressed && onPress ? styles.pressed : null,
+      ]}
+    >
+      {image && <Image style={styles.image} source={image} />}
+      {icon && (
+        <Icon
+          name={icon.name}
+          backgroundColor={icon.backgroundColor}
+          iconColor={icon.iconColor}
+          size={icon.size}
+        />
+      )}
+      <View style={styles.detailsContainer}>
+        <AppText style={styles.title} numberOfLines={1}>
+          {title}
+        </AppText>
+        {subTitle && (
+          <AppText style={styles.subtitle} numberOfLines={2}>
+            {subTitle}
+          </AppText>
+        )}
+      </View>
+      <MaterialCommunityIcons
+        name="chevron-right"
+        size={25}
+        color={colors.medium}
+      />
+    </Pressable>
+  );
+
+  if (Platform.OS === "web" || !renderRightActions) {
+    return content;
+  }
+
   return (
     <GestureHandlerRootView>
-      <Swipeable renderRightActions={renderRightActions}>
-        <TouchableHighlight underlayColor={colors.light} onPress={onPress}>
-          <View style={styles.container}>
-            {image && <Image style={styles.image} source={image} />}
-            {icon && (
-              <Icon
-                name={icon.name}
-                backgroundColor={icon.backgroundColor}
-                iconColor={icon.iconColor}
-                size={icon.size}
-              />
-            )}
-            <View style={styles.detailsContainer}>
-              <AppText style={styles.title} numberOfLines={1}>
-                {title}
-              </AppText>
-              {subTitle && (
-                <AppText style={styles.subtitle} numberOfLines={2}>
-                  {subTitle}
-                </AppText>
-              )}
-            </View>
-            <MaterialCommunityIcons
-              name="chevron-right"
-              size={25}
-              color={colors.medium}
-            />
-          </View>
-        </TouchableHighlight>
-      </Swipeable>
+      <Swipeable renderRightActions={renderRightActions}>{content}</Swipeable>
     </GestureHandlerRootView>
   );
 }
@@ -56,6 +74,14 @@ const styles = StyleSheet.create({
     padding: 15,
     alignItems: "center",
     backgroundColor: colors.white,
+    ...Platform.select({
+      web: {
+        cursor: "pointer",
+      },
+    }),
+  },
+  pressed: {
+    backgroundColor: colors.light,
   },
   detailsContainer: {
     marginVertical: 10,
