@@ -30,6 +30,7 @@ function AppCard({ imageUrl, title, subTitle, onPress }) {
   return (
     <Pressable
       onPress={onPress}
+      onClick={onPress}
       accessibilityRole="button"
       style={({ pressed }) => [styles.card, pressed && styles.pressed]}
     >
