@@ -1,11 +1,13 @@
 import {
-  FlatList,
   Platform,
+  Pressable,
   RefreshControl,
+  ScrollView,
   StyleSheet,
   View,
 } from "react-native";
 import { useCallback, useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 import Screen from "../components/Screen";
 import AppCard from "../components/AppCard";
@@ -17,7 +19,8 @@ import routes from "../navigation/routes";
 import listingsApi from "../api/listings";
 import useApi from "../hooks/useApi";
 
-function ListingsScreen({ navigation }) {
+function ListingsScreen() {
+  const navigation = useNavigation();
   const getListingsApi = useApi(listingsApi.getListings);
 
   useEffect(() => {
@@ -28,9 +31,17 @@ function ListingsScreen({ navigation }) {
     getListingsApi.request();
   }, [getListingsApi]);
 
+  const openListing = (listing) => {
+    navigation.navigate(routes.LISTING_DETAILS, listing);
+  };
+
+  const listings = getListingsApi.data || [];
+
   return (
     <Screen style={styles.container}>
-      <ActivityIndicator visible={getListingsApi.loading} />
+      {getListingsApi.loading && listings.length === 0 && (
+        <ActivityIndicator visible />
+      )}
       {getListingsApi.error && (
         <View style={styles.errorContainer}>
           <AppText style={styles.errorText}>
@@ -41,7 +52,7 @@ function ListingsScreen({ navigation }) {
       )}
       {!getListingsApi.error &&
         !getListingsApi.loading &&
-        (!getListingsApi.data || getListingsApi.data.length === 0) && (
+        listings.length === 0 && (
           <View style={styles.emptyContainer}>
             <AppText style={styles.emptyTitle}>No listings yet</AppText>
             <AppText style={styles.emptySubtitle}>
@@ -49,31 +60,35 @@ function ListingsScreen({ navigation }) {
             </AppText>
           </View>
         )}
-      <FlatList
-        data={getListingsApi.data || []}
-        keyExtractor={(item) => item.id.toString()}
+      <ScrollView
         contentContainerStyle={styles.listContent}
         refreshControl={
           <RefreshControl
-            refreshing={getListingsApi.loading}
+            refreshing={getListingsApi.loading && listings.length > 0}
             onRefresh={handleRefresh}
             tintColor={colors.primary}
           />
         }
-        renderItem={({ item: listing }) => (
-          <AppCard
-            imageUrl={
-              listing?.images?.[0]?.url ||
-              require("../assets/placeholder-image.png")
-            }
-            title={listing.title}
-            subTitle={`$${listing.price}`}
-            onPress={() =>
-              navigation.navigate(routes.LISTING_DETAILS, listing)
-            }
-          />
-        )}
-      />
+      >
+        {listings.map((listing) => (
+          <Pressable
+            key={listing.id.toString()}
+            onPress={() => openListing(listing)}
+            accessibilityRole="button"
+            accessibilityLabel={`${listing.title} $${listing.price}`}
+          >
+            <AppCard
+              imageUrl={
+                listing?.images?.[0]?.url ||
+                require("../assets/placeholder-image.png")
+              }
+              title={listing.title}
+              subTitle={`$${listing.price}`}
+              onPress={() => openListing(listing)}
+            />
+          </Pressable>
+        ))}
+      </ScrollView>
     </Screen>
   );
 }
